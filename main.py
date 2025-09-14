@@ -8,7 +8,6 @@ import subprocess
 from minisweagent.models import get_model
 from minisweagent.environments.local import LocalEnvironment
 
-model_name = "claude-sonnet-4-20250514"
 
 
 
@@ -19,7 +18,7 @@ class ValidatingAgentConfig(AgentConfig):
     
     
 class ValidatingAgent(DefaultAgent):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, model_name: str, **kwargs):
         super().__init__(*args, **kwargs, 
                          config_class=ValidatingAgentConfig,
                          model=get_model(input_model_name=model_name),
@@ -66,14 +65,14 @@ class ValidatingAgent(DefaultAgent):
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    # Support optional 'run' subcommand like: `python main.py run --exec ...`
-    parser.add_argument("command", nargs="?", default="run")
     parser.add_argument("--task", type=str, required=True)
     parser.add_argument("--exec", type=str, required=True)
     parser.add_argument("--debug", action="store_true")
+    parser.add_argument("--model", type=str,  default="claude-sonnet-4-20250514")
     args = parser.parse_args()
     agent = ValidatingAgent(
-        exec_command=args.exec
+        exec_command=args.exec,
+        model_name=args.model
         
 
     )
