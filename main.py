@@ -72,8 +72,6 @@ if __name__ == "__main__":
     agent = ValidatingAgent(
         exec_command=args.exec,
         model_name=args.model
-        
-
     )
     global debug
     debug = args.debug
