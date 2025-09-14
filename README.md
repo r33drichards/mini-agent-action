@@ -36,10 +36,8 @@ OK
 (mini-agent-action) ➜  mini-agent-action git:(master) ✗ 
 ```
 
-publish 
+patch release
 
-
-test pypi
 ```
 uv publish --token $PYPI_TOKEN
 ```

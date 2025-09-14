@@ -29,6 +29,32 @@ class ValidatingAgent(DefaultAgent):
             env=LocalEnvironment(),
         )
 
+    # More informative logging of the agent's message log when --debug is set
+    def add_message(self, role: str, content: str, **kwargs):
+        super().add_message(role, content, **kwargs)
+        if debug:
+            assistant_steps = sum(1 for m in self.messages if m.get("role") == "assistant")
+            tag = f"step {assistant_steps:02d}" if role in ("assistant", "user") else "setup"
+            cost_str = ""
+            try:
+                if role == "assistant":
+                    cost_val = getattr(self.model, "cost", 0.0)
+                    n_calls_val = getattr(self.model, "n_calls", 0)
+                    cost_str = f" (calls={n_calls_val}, cost={cost_val:.4f})"
+            except Exception:
+                pass
+            print(f"[{tag}] {role}{cost_str}:")
+            print(content if isinstance(content, str) else str(content))
+            print()
+
+    def _summarize_for_log(self, text: str, limit: int = 800) -> str:
+        if not isinstance(text, str):
+            return str(text)
+        t = text.rstrip()
+        if len(t) <= limit:
+            return t
+        return t[:limit] + f"\n... [truncated {len(t) - limit} chars]"
+
     def has_finished(self, output: dict[str, str]):
         """Raises Submitted exception with final output if the agent has finished its task."""
         if self.config.exec_command:
@@ -62,7 +88,25 @@ def main():
     agent = ValidatingAgent(exec_command=args.exec, model_name=args.model)
     global debug
     debug = args.debug
-    agent.run(args.task)
+    status, message = agent.run(args.task)
+    if debug:
+        try:
+            cost_val = getattr(agent.model, "cost", 0.0)
+            n_calls_val = getattr(agent.model, "n_calls", 0)
+            print(f"finished with status={status}, steps={n_calls_val}, cost={cost_val:.4f}")
+        except Exception:
+            print(f"finished with status={status}")
+        # Show the full transcript
+        if agent.messages:
+            print("full transcript:")
+            for idx, m in enumerate(agent.messages, start=1):
+                role = m.get("role", "?")
+                content = m.get("content", "")
+                if not isinstance(content, str):
+                    content = str(content)
+                print(f"----- message {idx} ({role}) -----")
+                print(content)
+                print("----- end message -----\n")
 
 
 if __name__ == "__main__":
