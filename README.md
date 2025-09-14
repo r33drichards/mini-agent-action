@@ -52,5 +52,7 @@ OK
 patch release
 
 ```
+source .env
+uv build
 uv publish --token $PYPI_TOKEN
 ```
