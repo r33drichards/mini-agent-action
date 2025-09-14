@@ -1,3 +1,16 @@
+
+# quickstart 
+
+```
+pip install mini-agent-action
+```
+
+```
+mini-agent-action --exec "python test.py" --task "fix this test, you can see it fail with python test.py. you will be validated against that cmd" --debug
+```
+
+
+
 test cmd 
 
 ```
