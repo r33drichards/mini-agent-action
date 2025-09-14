@@ -11,6 +11,8 @@ from minisweagent.environments.local import LocalEnvironment
 
 
 
+debug = False
+
 @dataclass
 class ValidatingAgentConfig(AgentConfig):
     exec_command: Optional[str] = None
@@ -61,7 +63,7 @@ class ValidatingAgent(DefaultAgent):
  
  
    
-if __name__ == "__main__":
+def main():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--task", type=str, required=True)
@@ -76,3 +78,7 @@ if __name__ == "__main__":
     global debug
     debug = args.debug
     agent.run(args.task)
+
+
+if __name__ == "__main__":
+    main()
