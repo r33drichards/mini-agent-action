@@ -2,11 +2,12 @@ test cmd
 
 ```
 python main.py  --exec "python test.py" --task "fix this test, you can see it fail with python test.py. you will be validated against that cmd" --debug   
+
 ```
 
 output
 
-```
+
 
 ```
 👋 This is mini-swe-agent version 1.11.1.
@@ -33,4 +34,12 @@ Ran 1 test in 0.000s
 OK
 
 (mini-agent-action) ➜  mini-agent-action git:(master) ✗ 
+```
+
+publish 
+
+
+test pypi
+```
+uv publish --token $PYPI_TOKEN
 ```
