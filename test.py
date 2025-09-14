@@ -3,7 +3,7 @@ import unittest
 from unittest import TestCase
 
 def add(a, b):
-    return a + b + 1
+    return a + b
 
 class Test(TestCase):
     def test_failing(self):
